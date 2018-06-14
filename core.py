@@ -16,10 +16,8 @@ class Config:
     PICS_EXT = ".jpg"
     PICS_DIR = "pics"
 
-    # 每次请求超时时间（秒）
-    REQUEST_TIMEOUT = 60
     # 每次请求延迟（秒）
-    DELAY_TIME = 0.25
+    DELAY_TIME = 0.35
     # 最大并发数，尽量不要设置得过大
     MAX_CONNECT_COUNT = 64
     # 单任务爬取数
@@ -98,9 +96,7 @@ async def download(sem, url, session):
             return
         await asyncio.sleep(CONFIG.DELAY_TIME)
         async with sem:
-            async with session.get(
-                url, headers=get_headers(url), timeout=CONFIG.REQUEST_TIMEOUT
-            ) as response:
+            async with session.get(url, headers=get_headers(url)) as response:
                 data = await response.read()
             async with aiofiles.open(file_path, mode="ab") as f:
                 await f.write(data)
